@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNet.Identity
+@model ElanBookStore.ViewModels.LoginViewModel
+@{ 
+    string msg;
+    if (Session["error"] != null)
+    {
+         msg = (string)Session["error"];
+    }else
+    {
+        msg = "";
+    }
+}
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <p class="navbar-brand">Hello  @User.Identity.GetUserName() ! </p>
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        @using (Html.BeginForm("Login", "Account", new { partial = true }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <li>
+                @Html.TextBoxFor(m => m.Username, new { placeholder = "Username" })
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
+                <input type="submit" name="name" value="Login" id="login"/>
+            </li>
+            @Html.ValidationMessageFor(x => x.Username)
+            @Html.ValidationMessageFor(x => x.Password)
+            <li id="listitem">@msg</li>
+        }
+        You don't have a account? @Html.ActionLink("Sign Up!", "Register", "Account",new { },new {@class="registertext" })
+    </ul>
+    @Scripts.Render("~/bundles/jquery")
+  
+}

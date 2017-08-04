@@ -1,0 +1,65 @@
+﻿@model ElanBookStore.ViewModels.BookViewModel
+@{
+    ViewBag.Title = String.IsNullOrEmpty(Model.Author) ? "Create" : "Edit";
+    string title = ViewBag.Title;
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<div class="modal fade" id="theModal" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input type="button" value="x" class="close pull-right" data-dismiss="modal" />
+                <h2 id="title">Edit - @Model.Title</h2>
+                <p>* Mandatory fields</p>
+            </div>
+            <div class="modal-body">
+                <div class="error hidden">
+                    <p class="text-danger">All fields are required</p>
+                </div>
+               @using (Html.BeginForm(title, "Books", FormMethod.Post, new { id = "modalForm" }))
+               {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <label class="control-label col-md-2">ISBN *</label>
+                        <div class="col-md-10" id="divISBN">
+                            @Html.EditorFor(model => model.ISBN, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessage("ISBN", new { @class = "text-danger", id = "validation" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Title *</label>
+                        <div class="col-md-10" id="divTitle">
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Author *</label>
+                        <div class="col-md-10" id="divAuthor">
+                            @Html.EditorFor(model => model.Author, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Genre *</label>
+                        <div class="col-md-10" id="divGenre">
+                            @Html.EditorFor(model => model.Genre, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+
+                </div>
+               }
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <input type="submit" value="Edit" class="btn btn-default btn-success" id="modalSubmit" />
+                    <input type="button" id="dismiss" value="Cancel" class="btn btn-default btn-danger dismiss" data-dismiss="modal"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

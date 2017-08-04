@@ -1,0 +1,193 @@
+﻿@model IPagedList<ElanBookStore.Models.Book>
+@using ElanBookStore.ViewModels
+@{
+    ViewBag.Title = "Index";
+}
+<h2 class="focus">Books</h2>
+<div>
+    @Html.PagedListPager(Model,page => Url.Action("Index",new { page }),
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions()
+    {
+         InsertionMode = InsertionMode.Replace,
+         HttpMethod = "GET",
+         UpdateTargetId = "kontejner-table"
+    }))
+</div>
+<div class="kont" id="kontejner-table">
+    @Html.Partial("_Table")
+</div>
+@*<p>
+        @Html.ActionLink("Add", "Create", new { }, new { @class = "btn btn-primary" })
+    </p>*@
+<input type="button" value="Add" id="modalbtn" class="btn btn-default" />
+<div id="wrapper">
+    @Html.Partial("_ModalPartial", new BookViewModel())
+</div>
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script>
+    function edit(id) {
+        $.ajax({
+            url: '/Books/Edit/' + id,
+            success: function (data) {
+                $('#wrapper').html(data);
+                showModal();
+            }
+        });
+    }
+
+    $('table').on('click', 'span.glyphicon', function () {
+        var value = $(this).attr('name');
+        var page = $('a').parent('li.active').text();
+        var param = {
+            "order": value,
+            "page":page
+        };
+        $.ajax({
+            url: '/Books/Index/',
+            type: 'GET',
+            data: param,
+            success: function (data) {
+                $('table').html(data);
+            }
+        });
+    });
+
+    //$('a').parent('li').parent('.pagination').on('click', 'a', function (e) {
+    //    var options = {
+    //        url: '/Books/Index/',
+    //        data: {"page":$(this).text()}
+    //    };
+    //    var current = $('li.active');
+    //    var next = $(this).parent();
+    //    $.ajax(options).done(function (data) {
+    //        $('table').html(data);
+    //        current.removeClass('active');
+    //        next.addClass('active');
+    //    });
+    //    e.preventDefault();
+    //});
+
+    $('#wrapper').on('click', '[data-dismiss="modal"]', function (e) {
+        var modal = $('#wrapper');
+        var inputs = modal.find('input.form-control');
+
+        $.each(inputs, function (index, value) {
+            $(value).val('');
+        });
+        $('span.text-danger').remove();
+     
+        $('div.validation-summary-errors').remove();
+        $('div.error').addClass('hidden');
+
+
+    });
+
+    $('#wrapper').on('click', '#modalSubmit', function () {
+            if(validateAll()){
+            $('#modalForm').submit();
+            $('div.error').addClass('hidden');
+            } else {
+                $('div.error').removeClass('hidden');
+            }
+    });
+
+    $('#wrapper').on('blur', 'input#ISBN', function () {
+        checkISBN();
+    });
+    $('#wrapper').on('blur', 'input#Title', function () {
+        checkTitle();
+    });
+    $('#wrapper').on('blur', 'input#Author', function () {
+        checkAuthor();
+    });
+    $('#wrapper').on('blur', 'input#Genre', function () {
+        checkGenre();
+    });
+
+    var validateAll = function () {
+        if(checkISBN() && checkTitle() && checkAuthor() && checkGenre())
+        {
+            return true;
+        }
+        return false;
+    };
+
+   
+    function checkISBN() {
+        var textbox = $('input#ISBN');
+        if (!textbox.val().trim() && $('span#spanISBN').length === 0 && $('span#validation').children().length === 0) {
+            $('div#divISBN').append('<span class="text-danger" id="spanISBN">ISBN is required</span>');
+            return false;
+
+        } else {
+            if(textbox.val().trim()){
+                $('span.text-danger').remove();
+                 $('span#validation').remove();
+                 return true;
+            }
+        }
+
+    };
+
+    function checkTitle() {
+        var textbox = $('input#Title');
+
+        if (!textbox.val().trim() && $('span#spanTitle').length === 0) {
+            $('div#divTitle').append('<span class="text-danger" id="spanTitle">Title is required</span>');
+            return false;
+        } else {
+            if (textbox.val().trim()){
+                $('span#spanTitle').remove();
+                return true;
+            }
+        }
+    };
+
+    function checkAuthor() {
+        var textbox = $('input#Author');
+
+        if (!textbox.val().trim() && $('span#spanAuthor').length === 0) {
+            $('div#divAuthor').append('<span class="text-danger" id="spanAuthor">Author is required</span>');
+            return false;
+        } else {
+            if (textbox.val().trim()){
+                $('span#spanAuthor').remove();
+                return true;
+            }
+        }
+    };
+
+    function checkGenre() {
+        var textbox = $('input#Genre');
+
+        if (!textbox.val().trim() && $('span#spanGenre').length === 0) {
+            $('div#divGenre').append('<span class="text-danger" id="spanGenre">Genre is required</span>');
+            return false;
+        } else {
+            if (textbox.val().trim()){
+                $('span#spanGenre').remove();
+                return true;
+            }
+        }
+    }
+
+
+    $('a.delete').click(function () {
+        if (!confirm("Delete book?")) {
+            return false;
+        }
+    });
+    var showModal = function () {
+        $('#theModal').modal('show');
+    };
+
+
+    $('#modalbtn').click(function () {
+        $('h2#title').text("Add Book");
+        $('#modalSubmit').val('Add');
+        $('#theModal').modal('show');
+
+    });
+</script>

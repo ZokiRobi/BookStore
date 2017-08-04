@@ -1,0 +1,51 @@
+﻿@model IPagedList<ElanBookStore.Models.Book>
+<table cellpadding="2" class="table table-condensed table-bordered tabela" id="pagedtable">
+    <tr class="active">
+        <th>
+            <a><span class="glyphicon glyphicon-sort-by-order-alt" name="ISBN" title="Sort by ISBN"></span></a> ISBN
+        </th>
+        <th>
+            <a><span class="glyphicon glyphicon-sort-by-alphabet" name="Title"></span></a> Title
+        </th>
+        <th>
+            <a><span class="glyphicon glyphicon-sort-by-alphabet" name="Author"></span></a> Author
+        </th>
+        <th>
+            <a><span class="glyphicon glyphicon-sort-by-alphabet" name="Genre"></span></a> Genre
+        </th>
+        <th colspan="2"><span class="glyphicon glyphicon-sort-by-alphabet"></span> Actions</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        if (!item.IsDeleted)
+        {
+            <tr id="tableHeader">
+
+                @Html.HiddenFor(modelItem => item.BookID, new { id = "bookid" })
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISBN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @*@Html.ActionLink("Edit", "Edit", new { id = item.BookID }, new { @class = "edit" }) |*@
+                    <a href="#" name="@item.BookID" class="edit" onclick="edit($(this).attr('name'))">Edit</a>
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.BookID }, new { @class = "delete" })
+                </td>
+
+            </tr>  }
+    }
+</table>
+

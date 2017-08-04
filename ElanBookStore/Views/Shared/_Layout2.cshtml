@@ -1,0 +1,45 @@
+﻿@using ElanBookStore.ViewModels
+@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ElanWave BookStore</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Content/Site.css" />
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" id="topdiv">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="mybrand navbar-brand pull-left" id="brand">Elan<span class="wave">Wave</span> bookstore</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @Html.ActionLink("Books", "Index", "Books", new { }, new { @class = "navbar-brand" })
+                }
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav"></ul>
+                @Html.Partial("_LoginPartial", new LoginViewModel())
+            </div>
+        </div>
+    </div>
+    <div class="container body-content kontejner">
+        @RenderBody()
+        <hr />
+        
+    </div>
+    
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

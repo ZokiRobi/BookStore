@@ -1,0 +1,119 @@
+﻿@model ElanBookStore.ViewModels.RegisterViewModel
+@{
+    ViewBag.Title = "Sign Up";
+}
+<h5 class="pull-right text-info">* Mandatory fields</h5>
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "formReg" }))
+{
+    @Html.AntiForgeryToken()
+    
+    @Html.ValidationSummary("", new { @class = "alert-danger" })
+    <div class="form-group">
+        <label class = "col-md-2 control-label">Username *</label>
+        <div class="col-md-10" id="username">
+            @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">Password *</label>
+        <div class="col-md-10" id="password">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">Repeat Password *</label>
+        <div class="col-md-10" id="confirm">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Register" class="btn btn-default" />
+            @Html.ActionLink("cancel", "Index", "Home")
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var checkUserNameLength = function () {
+            $('input#Username').blur(function () {
+                var textbox = $(this);
+                if (textbox.val().length > 45) {
+                    $('div#username')
+                        .append('<span class="text-danger" id="spanUsername">Username is too long. Maximum length is 45</span>');
+                } else {
+                    if (textbox.val().trim())
+                        $('span#spanUsername').remove();
+
+                }
+            }); 
+        };
+
+        var checkPasswordLength = function () {
+            var textbox = $(this);
+            $('input#Password').blur(function () {
+                var textbox = $(this);
+                if (textbox.val().length > 45) {
+                    $('div#password')
+                        .append('<span class="text-danger" id="spanPassword">Password is too long. Maximum length is 45</span>');
+                } else {
+                    if (textbox.val().trim())
+                        $('span#spanPassword').remove();
+
+                }
+            });
+        };
+
+        var checkUserName = function () {
+            $('input#Username').blur(function () {
+                var textbox = $(this);
+                if (!textbox.val().trim() && $('span#spanUsername').length == 0) {
+                    $('div#username').append('<span class="text-danger" id="spanUsername">Username is required</span>');
+                } else {
+                    if (textbox.val().trim())
+                        $('span#spanUsername').remove();
+
+                }
+            });
+        };
+        var checkPassword = function () {
+            $('input#Password').blur(function () {
+                var textbox = $(this);
+                if (!textbox.val().trim() && $('span#spanPassword').length == 0) {
+                    $('div#password').append('<span class="text-danger" id="spanPassword">Password is required</span>');
+                } else {
+                    if (textbox.val().trim())
+                        $('span#spanPassword').remove();
+
+                }
+            });
+        };
+        var checkConfirmPass = function () {
+            $('input#ConfirmPassword').blur(function () {
+                var textbox = $(this);
+                if (!textbox.val().trim() && $('span#spanConfirm').length == 0) {
+                    $('div#confirm').append('<span class="text-danger" id="spanConfirm">Password is required</span>');
+                } else {
+                    if (textbox.val().trim())
+                        $('span#spanConfirm').remove();
+
+                }
+            });
+        };
+
+        checkUserName();
+        checkPassword();
+        checkConfirmPass();
+        checkUserNameLength();
+        checkPasswordLength();
+        $('#formReg').submit(function (event) {
+            $('input#Username').blur();
+            $('input#Password').blur();
+            $('input#ConfirmPassword').blur();
+           
+        });
+    </script>
+}
