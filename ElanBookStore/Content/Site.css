@@ -31,8 +31,8 @@ ul.nav, .navbar-nav, .navbar-right {
 }
 
 footer {
-    position: relative;
-    bottom:-60px;
+    position: absolute;
+    bottom:10px;
     width: 100%;
     height: 50px;
     background: #d7cece;
@@ -100,14 +100,14 @@ table.table.table-condensed.tabela {
     background-color: aliceblue;
 }
 
-    table.table.table-condensed.tabela th {
+ table.table.table-condensed.tabela th {
         padding-top: 12px;
         background-color: lightgray;
         height: 50px;
         border: solid 2px black;
     }
 
-    table.table.table-condensed.tabela td {
+ table.table.table-condensed.tabela td {
         border: solid 2px black;
     }
 
@@ -118,4 +118,11 @@ input#modalbtn.btn.btn-default {
 
 .glyphicon:hover {
     cursor: pointer !important;
+}
+
+div.kontejner {
+    position: relative;
+}
+p#link:hover {
+    font-size: 1.6em;
 }
